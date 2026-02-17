@@ -22,6 +22,7 @@ export default function CharacterPage() {
   const [character, setCharacter]   = useState(null)
   const [sections, setSections]     = useState([])
   const [infobox, setInfobox]       = useState([])
+  const [documents, setDocuments]   = useState([])
   const [loading, setLoading]       = useState(true)
   const [toast, setToast]           = useState(null)
 
@@ -42,10 +43,11 @@ export default function CharacterPage() {
   useEffect(() => {
     if (!id) return
     setLoading(true)
-    fetchCharacter(id).then(({ character: c, sections: s, infobox: ib }) => {
+    fetchCharacter(id).then(({ character: c, sections: s, infobox: ib, documents: d }) => {
       setCharacter(c)
       setSections(s)
       setInfobox(ib)
+      setDocuments(d)
       setIntroDraft(c?.intro || '')
       setNameDraft(c?.name || '')
       setLoading(false)
@@ -195,11 +197,13 @@ export default function CharacterPage() {
               <Infobox
                 character={character}
                 infoboxData={infobox}
+                documents={documents}
                 isEditor={isEditor}
                 onSaved={(newData) => {
                   setInfobox(Object.entries(newData).map(([k, v]) => ({ field_key: k, field_value: v })))
                   showToast('Infobox saved.')
                 }}
+                onImageSaved={(url) => setCharacter(c => ({ ...c, image_url: url }))}
               />
             </div>
 
